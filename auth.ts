@@ -1,12 +1,9 @@
 import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { prisma } from '@/db/prisma';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { compare } from './lib/encrypt';
-// import type { NextAuthConfig } from 'next-auth';
-import { cookies } from 'next/headers';
-// import { NextResponse } from 'next/server';
 import { authConfig } from './auth.config';
+import { prisma } from '@/db/prisma';
+import { cookies } from 'next/headers';
+import { compare } from './lib/encrypt';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const config = {
   pages: {
@@ -17,7 +14,6 @@ export const config = {
     strategy: 'jwt' as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       credentials: {
@@ -57,6 +53,7 @@ export const config = {
     }),
   ],
   callbacks: {
+    ...authConfig.callbacks,
     async session({ session, user, trigger, token }: any) {
       // Set the user ID from the token
       session.user.id = token.sub;
@@ -119,7 +116,6 @@ export const config = {
 
       return token;
     },
-    ...authConfig.callbacks,
   },
 };
 
