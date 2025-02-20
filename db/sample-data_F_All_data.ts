@@ -1,5 +1,3 @@
-// import {hashSync} from 'bcrypt-ts'
-
 const sampleData = {
   users: [
     {
